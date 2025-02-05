@@ -1,0 +1,18 @@
+[0;1;32m●[0m nginx.service - The nginx HTTP and reverse proxy server
+     Loaded: loaded (]8;;file://172-233-90-46.ip.linodeusercontent.com/usr/lib/systemd/system/nginx.service/usr/lib/systemd/system/nginx.service]8;;; [0;1;32menabled[0m; preset: [0;1;38;5;185mdisabled[0m)
+     Active: [0;1;32mactive (running)[0m since Mon 2024-12-23 16:40:44 KST; 15min ago
+    Process: 534878 ExecStartPre=/usr/bin/rm -f /run/nginx.pid (code=exited, status=0/SUCCESS)
+    Process: 534879 ExecStartPre=/usr/sbin/nginx -t (code=exited, status=0/SUCCESS)
+    Process: 534880 ExecStart=/usr/sbin/nginx (code=exited, status=0/SUCCESS)
+   Main PID: 534881 (nginx)
+      Tasks: 2 (limit: 12436)
+     Memory: 2.0M
+        CPU: 26ms
+     CGroup: /system.slice/nginx.service
+             ├─[0;38;5;245m534881 "nginx: master process /usr/sbin/nginx"[0m
+             └─[0;38;5;245m534882 "nginx: worker process"[0m
+
+Dec 23 16:40:44 172-233-90-46.ip.linodeusercontent.com systemd[1]: Starting The nginx HTTP and reverse proxy server...
+Dec 23 16:40:44 172-233-90-46.ip.linodeusercontent.com nginx[534879]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+Dec 23 16:40:44 172-233-90-46.ip.linodeusercontent.com nginx[534879]: nginx: configuration file /etc/nginx/nginx.conf test is successful
+Dec 23 16:40:44 172-233-90-46.ip.linodeusercontent.com systemd[1]: Started The nginx HTTP and reverse proxy server.

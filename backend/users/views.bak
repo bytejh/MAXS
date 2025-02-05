@@ -1,0 +1,51 @@
+from rest_framework.viewsets import ModelViewSet
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .models import CustomUser, PermissionGroup
+from .serializers import CustomUserSerializer, PermissionGroupSerializer
+
+# 사용자 ViewSet
+class CustomUserViewSet(ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+# 권한 그룹 ViewSet
+class PermissionGroupViewSet(ModelViewSet):
+    queryset = PermissionGroup.objects.all()
+    serializer_class = PermissionGroupSerializer
+    filter_backends = []  # 필터링 관련 설정
+    search_fields = ['name']  # 검색 필드 설정
+
+# 회원가입 API
+@csrf_exempt
+def signup_request(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            email = data.get('email')
+            password = data.get('password')
+            phone = data.get('phone')
+
+            # 필수 항목 확인
+            if not username or not email or not password:
+                return JsonResponse({"error": "필수 항목 누락"}, status=400)
+
+            # 중복 확인
+            if CustomUser.objects.filter(username=username).exists():
+                return JsonResponse({"error": "이미 존재하는 사용자 이름입니다."}, status=400)
+            if CustomUser.objects.filter(email=email).exists():
+                return JsonResponse({"error": "이미 존재하는 이메일 주소입니다."}, status=400)
+
+            # 사용자 생성
+            user = CustomUser.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                phone_number=phone
+            )
+            return JsonResponse({"message": "회원가입 성공"}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": f"회원가입 중 오류가 발생했습니다: {str(e)}"}, status=500)
+    return JsonResponse({"error": "허용되지 않은 메서드입니다."}, status=405)
