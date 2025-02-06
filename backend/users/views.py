@@ -50,8 +50,9 @@ class CustomUserViewSet(ModelViewSet):
             user = serializer.save()
             user.set_password(request.data.get("password"))  # 비밀번호 해싱 적용
            
-            # 신규 생성된 user 의 is_staff 를 기본적으로 false로 설정
+            # 신규 생성된 user 의 is_staff, is_active 를 기본적으로 false로 설정
             user.is_staff = False
+            user.is_active = False
 
             # Permission Group 의 권한을 사용자에게 적용
             if user.permission_group:
