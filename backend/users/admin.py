@@ -9,25 +9,10 @@ admin.site.unregister(Group)
 
 # ✅ User 수정 시 사용할 Form 추가 (비밀번호 변경 가능)
 class CustomUserChangeForm(forms.ModelForm):
-    """ User 수정 시 Password 필드 추가 """
-    password = forms.CharField(
-        label="새 비밀번호",
-        widget=forms.PasswordInput,
-        required=False,  # 필수 입력 아님
-    )
 
     class Meta:
         model = CustomUser
-        fields = ("username", "email", "phone_number", "is_active", "permission_group", "password")
-
-    def save(self, commit=True):
-        """ 비밀번호가 입력된 경우 set_password() 적용 """
-        user = super().save(commit=False)
-        if self.cleaned_data["password"]:
-            user.set_password(self.cleaned_data["password"])
-        if commit:
-            user.save()
-        return user
+        fields = ("username", "email", "phone_number", "is_active", "permission_group")
 
 # ✅ UserAdmin 설정 (Admin에서 Password 필드 표시)
 class CustomUserAdmin(UserAdmin):
@@ -38,7 +23,6 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {"fields": ("username", "email", "phone_number", "is_active", "permission_group")}),
-        ("비밀번호 변경", {"fields": ("password",)}),  # ✅ Password 필드 추가
     )
 
     add_fieldsets = (
@@ -49,10 +33,11 @@ class CustomUserAdmin(UserAdmin):
     )
 
     def save_model(self, request, obj, form, change):
-        """ 비밀번호가 변경되면 set_password() 적용 """
-        if "password" in form.cleaned_data:
+        """ 비밀번호 변경이 있을 때만 set_password() 적용 """
+        if "password" in form.cleaned_data and form.cleaned_data["password"]:
             obj.set_password(form.cleaned_data["password"])
         obj.save()
+
 
 # ✅ Admin 등록 (`@admin.register()` 대신 `admin.site.register()` 사용)
 class MenuAdmin(admin.ModelAdmin):
