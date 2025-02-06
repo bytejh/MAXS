@@ -17,12 +17,12 @@ class CustomUserChangeForm(forms.ModelForm):
 # ✅ UserAdmin 설정 (Admin에서 Password 필드 표시)
 class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm  # 수정 시 사용할 폼 설정
-    list_display = ("username", "email", "permission_group", "is_active")
+    list_display = ("username", "email", "permission_group", "is_active","is_staff")
     search_fields = ("username", "email")
-    list_filter = ("is_active", "permission_group")
+    list_filter = ("is_active", "permission_group","is_staff")
 
     fieldsets = (
-        (None, {"fields": ("username", "email", "phone_number", "is_active", "permission_group")}),
+        (None, {"fields": ("username", "email", "phone_number", "is_active","is_staff", "permission_group")}),
     )
 
     add_fieldsets = (
