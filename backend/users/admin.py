@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group   # Django 기본 Group
 from .models import CustomUser, PermissionGroup, Menu
 
@@ -19,11 +20,24 @@ class PermissionGroupAdmin(admin.ModelAdmin):
     fields = ('name','description','permissions','menus')
 
 @admin.register(CustomUser)
-class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'permission_group',  'is_active')
-    search_fields = ('username', 'email')
-    list_filter = ('is_active', 'permission_group')
+class CustomUserAdmin(UserAdmin):
+    list_display = ("username", "email", "permission_group", "is_active")
+    search_fields = ("username", "email")
+    list_filter = ("is_active", "permission_group")
+
     fieldsets = (
-        (None, {'fields': ('username', 'email', 'phone_number', 'is_active', 'permission_group')}),
+        (None, {"fields": ("username", "email", "phone_number", "password", "is_active", "permission_group")}),
     )
 
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("username", "email", "phone_number", "password1", "password2"),
+        }),
+    )
+
+    def save_model(self, request, obj, form, change):
+        """ 비밀번호가 변경되면 set_password() 적용 """
+        if "password" in form.cleaned_data:
+            obj.set_password(form.cleaned_data["password"])
+        obj.save()

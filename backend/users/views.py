@@ -58,6 +58,20 @@ class CustomUserViewSet(ModelViewSet):
             return JsonResponse({"message": "사용자가 등록되었습니다.", "user": serializer.data}, status=201)
         return JsonResponse(serializer.errors, status=400)
 
+    def update(self, request, *args, **kwargs):
+        """ 사용자 수정 시 비밀번호 변경 가능하도록 처리 """
+        user = self.get_object()
+        password = request.data.get("password")
+
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            user = serializer.save()
+            if password:
+                user.set_password(password)
+                user.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
     def destroy(self, request, *args, **kwargs):
         """ 사용자 삭제 API """
         user = self.get_object()
