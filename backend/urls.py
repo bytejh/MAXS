@@ -16,6 +16,7 @@ def api_root(request):
 urlpatterns = [
     path('admin/', admin.site.urls),  # Django Admin 페이지
     path('api/', include('users.urls')),  # 사용자 API 연결
+    path('api/menus/', include('menus.urls')),
     path('api/', api_root, name='api-root'),  # API 루트 경로
     path('', lambda request: JsonResponse({"message": "welcome to datamarketing.kr!"})),  # 기본 메시지
 ]

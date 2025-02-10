@@ -26,7 +26,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',  #  Token 인증 활성화
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  #  로그인한 사용자만 API 사용 가능
+        'rest_framework.permissions.IsAuthenticated', 
     ),
 }
 
